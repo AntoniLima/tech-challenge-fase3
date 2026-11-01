@@ -1071,6 +1071,17 @@ python -m src.evaluation.interpretacao             # SHAP com e sem histórico
 python -m src.modeling.clusterizacao               # grupos de municípios por contexto
 ```
 
+### Testes
+
+Cinco testes conferem as decisões que sustentam a validação do modelo: nenhuma feature com
+vazamento, split sem município repetido entre treino e teste, teto do pré-processamento
+aprendido só no treino, limiar que atinge o recall-alvo e reprodutibilidade com a mesma
+semente. Rodam sobre `data/sample/`, sem acesso à AWS, a partir da raiz do projeto:
+
+```bash
+pytest tests/ -v
+```
+
 ### Consultas analíticas
 
 As consultas ficam versionadas em `sql/<camada>/`, com comentários explicando as
@@ -1153,7 +1164,7 @@ principal — não é necessário instalar nada à parte.
 │   ├── modeling/     # treino, otimizacao, selecao e clusterizacao
 │   ├── evaluation/   # metricas, SHAP, calibracao, metas, interpretacao e otimizacao
 │   └── visualization/# graficos reutilizaveis
-├── tests/
+├── tests/            # testes das decisoes de modelagem
 ├── requirements.txt
 ├── DICIONARIO.md     # dicionario de dados
 └── README.md
