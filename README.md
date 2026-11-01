@@ -47,7 +47,8 @@ cidade: 88% da variação está aí.
 15. [Fluxo de trabalho Git](#15-fluxo-de-trabalho-git)
 16. [Evidências de execução](#16-evidências-de-execução)
 17. [Roadmap e status](#17-roadmap-e-status)
-18. [Licença](#18-licença)
+18. [Equipe](#18-equipe)
+19. [Licença](#19-licença)
 
 ---
 
@@ -685,8 +686,10 @@ que fazer.
 
 A EDA (`notebooks/01_eda.ipynb`, seção 14) levantou hipóteses que a modelagem depois confirmou:
 
-- **O limite está nos dados.** Só 10,6% da variação do alvo está entre municípios; 89,4% está
-  entre crianças da mesma cidade. Isso antecipa o teto de ROC-AUC da seção 7 e torna obrigatória
+- **O limite está nos dados.** Na base completa, só 10,6% da variação do alvo está entre
+  municípios; 89,4% está
+  entre crianças da mesma cidade — no conjunto de teste, sem o RS, a proporção é de 11,6% e
+  88,4% (seção 7). Isso antecipa o teto de ROC-AUC e torna obrigatória
   a validação agrupada por município.
 - **O histórico domina.** A taxa de 2023 tem correlação de 0,70 com a de 2024 (0,74 sem o RS),
   por isso o modelo também foi analisado sem o histórico (seção 8).
@@ -699,8 +702,9 @@ A EDA (`notebooks/01_eda.ipynb`, seção 14) levantou hipóteses que a modelagem
   inverte dentro de cada região — e no SHAP a infraestrutura pesa 0,007.
 - **Tempo integral depende da região.** No país a correlação é −0,06; no Nordeste, onde ele
   existe de fato, 0,15. No SHAP, é a única variável escolar com peso relevante.
-- **O RS sofreu um choque em 2024.** Queda mediana de 18,9 pontos e 93,4% dos municípios em
-  queda. O estado foi mantido no treino, com análise de sensibilidade (notebook 04).
+- **O RS sofreu um choque em 2024.** Na base da Fase 3, queda mediana de 18,9 pontos e 93,4%
+  dos municípios em queda — a Fase 2, num recorte diferente de municípios, mediu 89,6% e 19,8
+  pontos (seção 10). Os números variam com o recorte; a conclusão, não. O estado foi mantido no treino, com análise de sensibilidade (notebook 04).
 
 ### Regiões com padrões semelhantes
 
@@ -782,6 +786,10 @@ comparação, não tendência.
 **Defasagem das fontes econômicas.** O PIB total é de 2023 e a composição setorial de
 2021, contra a avaliação de 2024. Riqueza municipal muda devagar, mas a defasagem existe.
 
+**Duas UFs ausentes.** A base cobre 25 UFs. O Distrito Federal não tem rede municipal de
+ensino, e a Gold só traz a rede municipal; Roraima não tem nenhum aluno que passe pelos
+filtros da Gold em 2024, e a causa na fonte não foi investigada.
+
 **Queda do Rio Grande do Sul em 2024.** Documentada na Fase 2: 89,6% dos municípios gaúchos
 com queda, mediana de −19,8 pontos, deslocamento uniforme. Duas explicações são compatíveis com
 os dados — alteração na origem da medição ou o efeito das enchentes de 2024, que suspenderam
@@ -861,8 +869,6 @@ calibrada e o ranking de municípios tem precisão demonstrada.
 ---
 
 ## 12. Possíveis evoluções futuras
-
-> 🚧 *Em construção.*
 
 Candidatos já identificados:
 
@@ -1228,7 +1234,7 @@ contexto perdido amanhã.
 | Backtest das metas por município | [`images/metas_backtest_municipios.png`](images/metas_backtest_municipios.png) | ✅ |
 | Agrupamento de municípios | [`images/clusters_pca.png`](images/clusters_pca.png) | ✅ |
 | Fatores com e sem histórico | [`images/interpretacao_comparacao.png`](images/interpretacao_comparacao.png) | ✅ |
-| Relatório técnico | `reports/` | ⏳ |
+| Dicionário de dados | [`DICIONARIO.md`](DICIONARIO.md) | ✅ |
 | Vídeo executivo (até 5 min) | — | ⏳ |
 
 A primeira delas é a que comprova a correção apontada na avaliação da Fase 2: a partição
@@ -1250,12 +1256,24 @@ anteriores coexistem em vez de serem sobrescritas.
 | S5 | 12–18/out | Otimização de hiperparâmetros | ✅ |
 | S6 | 19–25/out | Avaliação, calibração e interpretabilidade | ✅ |
 | S7 | 26–30/out | Clusterização e perguntas de negócio | ✅ |
-| S7 | 26–30/out | Documentação e vídeo executivo | 🚧 |
-| — | 31/out–03/nov | Margem para revisão | ⏳ |
+| S7 | 26–30/out | Documentação e vídeo executivo | ✅ |
+| — | 31/out–03/nov | Revisão final e entrega | ✅ |
 
 ---
 
-## 18. Licença
+## 18. Equipe
+
+| Nome | GitHub |
+|---|---|
+| Amanda Leite | [@amandacleite](https://github.com/amandacleite) |
+| Antonio Lima | [@AntoniLima](https://github.com/AntoniLima) |
+| Joviniano Lira | [@LiraJoviniano](https://github.com/LiraJoviniano) |
+| Luiza Cunha | [@luizafcunha](https://github.com/luizafcunha) |
+| Vinicius Moutinho | [@ViniciusMoutinhoDev](https://github.com/ViniciusMoutinhoDev) |
+
+---
+
+## 19. Licença
 
 Distribuído sob a licença MIT.
 
