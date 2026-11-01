@@ -683,20 +683,24 @@ que fazer.
 
 ## 9. Insights encontrados
 
-Dois achados da Fase 2 seguem como candidatos a desdobramento na modelagem:
+A EDA (`notebooks/01_eda.ipynb`, seção 14) levantou hipóteses que a modelagem depois confirmou:
 
-- O gradiente de infraestrutura — quase 10 pontos percentuais de taxa média entre o
-  primeiro e o quarto quartil do índice, no grão do município
-- O fenômeno de reversão em 1.917 municípios, mais que o triplo dos que avançam devagar
-  demais
-
-A EDA da Fase 3 (`notebooks/01_eda.ipynb`), já no grão do aluno, confirma e refina:
-
-- O gradiente de infraestrutura se mantém, mas mais fraco — 6,9 p.p. entre Q1 e Q4 (contra
-  9,3 p.p. por município) — o efeito é real, mas parcialmente diluído aluno a aluno
-- Municípios marcados como `uf_anomala` (RS) têm taxa de 45,3% contra 59,9% no resto do
-  país — decidir incluir, marcar ou excluir essas linhas fica para a modelagem
-- Nulos pequenos (até 2,6%) em 8 colunas de contexto municipal, a tratar por imputação
+- **O limite está nos dados.** Só 10,6% da variação do alvo está entre municípios; 89,4% está
+  entre crianças da mesma cidade. Isso antecipa o teto de ROC-AUC da seção 7 e torna obrigatória
+  a validação agrupada por município.
+- **O histórico domina.** A taxa de 2023 tem correlação de 0,70 com a de 2024 (0,74 sem o RS),
+  por isso o modelo também foi analisado sem o histórico (seção 8).
+- **A UF tem efeito próprio.** O Ceará alfabetiza 85,4% e a Bahia 36,0%, com contextos
+  parecidos — o efeito de UF que o SHAP isola na seção 8.
+- **A escala pesa contra.** Municípios até 10 mil habitantes alfabetizam 66,4%; de 200 mil a
+  1 milhão, 55,9%. O mesmo padrão aparece nos grupos abaixo.
+- **Infraestrutura é associação, não causa.** A taxa sobe de 57,7% para 67,1% entre o primeiro
+  e o quarto quartil do índice (6,9 pontos contando por criança), mas o gradiente some ou se
+  inverte dentro de cada região — e no SHAP a infraestrutura pesa 0,007.
+- **Tempo integral depende da região.** No país a correlação é −0,06; no Nordeste, onde ele
+  existe de fato, 0,15. No SHAP, é a única variável escolar com peso relevante.
+- **O RS sofreu um choque em 2024.** Queda mediana de 18,9 pontos e 93,4% dos municípios em
+  queda. O estado foi mantido no treino, com análise de sensibilidade (notebook 04).
 
 ### Regiões com padrões semelhantes
 
@@ -1067,6 +1071,17 @@ python -m src.evaluation.interpretacao             # SHAP com e sem histórico
 python -m src.modeling.clusterizacao               # grupos de municípios por contexto
 ```
 
+### Testes
+
+Cinco testes conferem as decisões que sustentam a validação do modelo: nenhuma feature com
+vazamento, split sem município repetido entre treino e teste, teto do pré-processamento
+aprendido só no treino, limiar que atinge o recall-alvo e reprodutibilidade com a mesma
+semente. Rodam sobre `data/sample/`, sem acesso à AWS, a partir da raiz do projeto:
+
+```bash
+pytest tests/ -v
+```
+
 ### Consultas analíticas
 
 As consultas ficam versionadas em `sql/<camada>/`, com comentários explicando as
@@ -1149,7 +1164,7 @@ principal — não é necessário instalar nada à parte.
 │   ├── modeling/     # treino, otimizacao, selecao e clusterizacao
 │   ├── evaluation/   # metricas, SHAP, calibracao, metas, interpretacao e otimizacao
 │   └── visualization/# graficos reutilizaveis
-├── tests/
+├── tests/            # testes das decisoes de modelagem
 ├── requirements.txt
 ├── DICIONARIO.md     # dicionario de dados
 └── README.md
