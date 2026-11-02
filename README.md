@@ -1257,7 +1257,7 @@ contexto perdido amanhã.
 | Agrupamento de municípios | [`images/clusters_pca.png`](images/clusters_pca.png) | ✅ |
 | Fatores com e sem histórico | [`images/interpretacao_comparacao.png`](images/interpretacao_comparacao.png) | ✅ |
 | Dicionário de dados | [`DICIONARIO.md`](DICIONARIO.md) | ✅ |
-| Vídeo executivo (até 5 min) | — | ⏳ |
+| Vídeo executivo (até 5 min) | [Assistir no YouTube](https://youtu.be/Adh3I5GLKIg?si=RLQpDa9J5w1bycGM) | ✅ |
 
 A primeira delas é a que comprova a correção apontada na avaliação da Fase 2: a partição
 por data de ingestão é reconhecida pelo Glue e consultável no Athena, então cargas
