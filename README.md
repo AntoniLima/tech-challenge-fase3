@@ -407,11 +407,23 @@ três primeiros, de 0,001 — dentro do que uma nova divisão treino/teste poder
 também empata, entre 0,594 e 0,596. Os modelos de árvores não extraem mais sinal que a
 regressão logística, e a seção 7 mostra por quê: o limite está nos dados, não no algoritmo.
 
-**Modelo escolhido: HistGradientBoosting.** Com desempenho equivalente, dois critérios
-competiam. A interpretabilidade favoreceria a regressão logística, cujos coeficientes se leem
-diretamente. Os números absolutos favorecem o HistGradientBoosting, com o melhor ROC-AUC e o
-melhor Brier dos quatro. O grupo escolheu o segundo e trata a interpretabilidade com SHAP, na
-seção 8.
+**Modelo escolhido: HistGradientBoosting.** A escolha se apoia na validação cruzada agrupada
+por município, feita só no treino
+([`comparacao_modelos_cv_teto30.csv`](reports/modelagem/comparacao_modelos_cv_teto30.csv)),
+onde os três primeiros também empatam dentro do desvio padrão:
+
+| Algoritmo | ROC-AUC na validação cruzada |
+|---|---:|
+| Regressão logística | 0,687 ± 0,004 |
+| HistGradientBoosting | 0,686 ± 0,005 |
+| Random Forest | 0,686 ± 0,005 |
+| Árvore de decisão rasa | 0,673 ± 0,006 |
+
+Com desempenho equivalente, o desempate foi um critério do grupo: o HistGradientBoosting
+capta relações não lineares e interações entre os fatores sem que elas precisem ser
+especificadas à mão, e a interpretabilidade é tratada com SHAP (seção 8). A regressão
+logística, que lidera a validação por 0,001, fica como referência interpretável. 
+As diferenças no teste também não entram no critério.
 
 ---
 
@@ -780,8 +792,16 @@ estavam em municípios diferentes** — o código é regenerado a cada ano, e a 
 de numeração, não de escola. A anonimização decorre da política do INEP de proteção de
 dados, em observância à LGPD.
 
-**Cobertura temporal de dois anos.** A avaliação cobre 2023 e 2024. Dois pontos sustentam
-comparação, não tendência.
+**Cobertura temporal de dois anos.** A base usa a avaliação de 2023 e de 2024: dois pontos
+sustentam comparação, não tendência. O modelo é treinado e testado com alunos de 2024,
+separados por município, e não foi validado no tempo (treinar em um ano e avaliar no
+seguinte). Essa validação é o primeiro passo antes de usar o modelo em um novo ano
+(seção 12).
+
+**Data de referência do Censo Escolar.** A estrutura escolar vem do Censo Escolar de 2024,
+coletado antes da prova, mas publicado depois dela. Para identificar o risco antes da
+avaliação, como propõe a seção 2, o uso em produção dependeria do Censo Escolar do ano
+anterior.
 
 **Defasagem das fontes econômicas.** O PIB total é de 2023 e a composição setorial de
 2021, contra a avaliação de 2024. Riqueza municipal muda devagar, mas a defasagem existe.
@@ -872,6 +892,8 @@ calibrada e o ranking de municípios tem precisão demonstrada.
 
 Candidatos já identificados:
 
+- **Validação temporal**: treinar com um ano da avaliação e testar no seguinte, como o modelo
+  seria usado de fato
 - Séries temporais, quando houver mais edições da avaliação
 - **MUNIC — Pesquisa de Informações Básicas Municipais** (IBGE): capacidade institucional
   da prefeitura. Avaliada e adiada por custo de exploração — 306 colunas e edições de
